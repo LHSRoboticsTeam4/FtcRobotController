@@ -26,8 +26,6 @@ public class AutoBlueFar extends LinearOpMode {
             int driveRightInches = 20;
             robot.autoDriveRobot(driveLeftInches, driveRightInches);
         }
-
-        robot.shutDown();
     }
 
 }   // end class

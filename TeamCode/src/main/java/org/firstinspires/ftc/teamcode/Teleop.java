@@ -8,7 +8,7 @@ public class Teleop  extends LinearOpMode {
 
     @Override
     public void runOpMode() {
-        RobotHardware robot = new RobotHardware(this);
+        RobotHardware robot = new RobotHardware(this, droneLaunch);
         robot.init();
 
         // Wait for the DS start button to be touched.

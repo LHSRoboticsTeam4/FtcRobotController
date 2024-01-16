@@ -13,7 +13,7 @@ public class AutoBlueClose extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        RobotHardware robot = new RobotHardware(this);
+        RobotHardware robot = new RobotHardware(this, droneLaunch);
         robot.init();
 
         waitForStart();

@@ -3,10 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -30,6 +28,8 @@ public class RobotHardware {
     private DcMotor leftRearWheel;
     private DcMotor rightRearWheel;
 
+    private Servo DroneLaunch;
+
     // Define other HardwareDevices as needed.
     private DistanceSensor rightPropSensor;
     private DistanceSensor leftPropSensor;
@@ -49,10 +49,13 @@ public class RobotHardware {
 
     /**
      * The one and only constructor requires a reference to an OpMode.
+     *
      * @param opmode
+     * @param droneLaunch
      */
-    public RobotHardware(LinearOpMode opmode) {
+    public RobotHardware(LinearOpMode opmode, Servo droneLaunch) {
         myOpMode = opmode;
+        DroneLaunch = droneLaunch;
     }
 
     /**

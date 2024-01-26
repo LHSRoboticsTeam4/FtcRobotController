@@ -9,11 +9,13 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name = "AutoRedClose", group = "")
 public class AutoRedClose extends LinearOpMode {
-
+    private RobotHardware robot;
     @Override
     public void runOpMode() {
 
-        RobotHardware robot = new RobotHardware(this, droneLaunch);
+        //RobotHardware robot = new RobotHardware(this);
+        // robot.init();
+        robot = new RobotHardware(this);
         robot.init();
 
         waitForStart();
@@ -22,11 +24,15 @@ public class AutoRedClose extends LinearOpMode {
         if (opModeIsActive()) {
 
                 // Set these variables to a initial distance, you will need to change this number
-                int driveLeftInches = 20;
-                int driveRightInches = 20;
+                int driveLeftInches = -25;
+                int driveRightInches = -25;
                 robot.autoDriveRobot(driveLeftInches, driveRightInches);
+                robot.driveToSpike(SpikeColor.RED,100,-.1 );
+                int positionNumber = robot.getSpikeObjectPosition();
+                robot.turnToSpike(positionNumber);
         }
     }
+
 
 }   // end class
 

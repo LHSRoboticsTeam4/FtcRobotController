@@ -28,7 +28,7 @@ public class RobotHardware {
     private DcMotor leftRearWheel;
     private DcMotor rightRearWheel;
 
-    private Servo DroneLaunch;
+    private Servo launchServo;
 
     // Define other HardwareDevices as needed.
     private DistanceSensor rightPropSensor;
@@ -47,15 +47,15 @@ public class RobotHardware {
     public static final double ARM_UP_POWER    =  0.45 ;
     public static final double ARM_DOWN_POWER  = -0.45 ;
 
+    static final double SENSOR_DISTANCE_OUT_OF_RANGE = 20 ;
+
     /**
      * The one and only constructor requires a reference to an OpMode.
      *
      * @param opmode
-     * @param droneLaunch
      */
-    public RobotHardware(LinearOpMode opmode, Servo droneLaunch) {
+    public RobotHardware(LinearOpMode opmode) {
         myOpMode = opmode;
-        DroneLaunch = droneLaunch;
     }
 
     /**
@@ -64,6 +64,7 @@ public class RobotHardware {
     public void init() {
         initWheelMotors();
         initSensors();
+        initServo();
 
         myOpMode.telemetry.addData(">", "Hardware Initialized");
         myOpMode.telemetry.update();
@@ -92,9 +93,6 @@ public class RobotHardware {
         // Reset wheel encoders
         setRunModeForAllWheels(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy
-        setRunModeForAllWheels(DcMotor.RunMode.RUN_USING_ENCODER);
-
         // Set wheel motors to not resist turning when motor is stopped.
         leftFrontWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         rightFrontWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -108,6 +106,10 @@ public class RobotHardware {
         colorSensor = myOpMode.hardwareMap.get(ColorSensor.class, "colorSensor");
     }
 
+    private void initServo() {
+        launchServo = myOpMode.hardwareMap.get(Servo.class, "DroneLaunch");
+    }
+
     /**
      * Drive robot to the targeted position designated by the passed leftInches and
      * rightInches, at the power specified by speed.
@@ -116,6 +118,12 @@ public class RobotHardware {
      * @param speed
      */
     public void autoDriveRobot(int leftInches, int rightInches, double speed) {
+        /**
+         * This shouldn't be needed, but without it, sometimes the left and right sides go in
+         * opposite directions even when the leftInches and rightInches are the same values!
+         */
+        setRunModeForAllWheels(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         int leftInchesToCPI = (int) (leftInches * COUNTS_PER_INCH);
         int rightInchesToCPI = (int) (rightInches * COUNTS_PER_INCH);
 
@@ -209,6 +217,7 @@ public class RobotHardware {
         final double leftFrontVelocity = vectorLength * Math.sin(robotAngle) - rightXscale;
         final double rightRearVelocity = vectorLength * Math.sin(robotAngle) + rightXscale;
         final double leftRearVelocity = vectorLength * Math.cos(robotAngle) - rightXscale;
+        setRunModeForAllWheels(DcMotor.RunMode.RUN_USING_ENCODER);
         // Use existing method to drive both wheels.
         setDrivePower(leftFrontVelocity, rightFrontVelocity, leftRearVelocity, rightRearVelocity);
     }
@@ -229,6 +238,28 @@ public class RobotHardware {
      */
     public void releaseDrone() {
         //Move whichever servo(?).
+        launchServo.setPosition(0.3);
+    }
+
+    public void resetDrone() {
+        launchServo.setPosition(0);
+    }
+
+    public void turnToSpike(int positionNumber) {
+        if ( positionNumber == 2 ) {
+            autoDriveRobot(10, 10); // 2 is in the middle, so we leave the pixel alone and backup.
+        }
+        else if (positionNumber == 1) {
+            autoDriveRobot (28, -28) ; // turn to the left
+            autoDriveRobot (-5, -5); // go forward to place pixel
+            autoDriveRobot(10, 10); // backup to clear pixel
+
+        }
+        else {
+            autoDriveRobot (-28, 28) ; // turn to the right
+            autoDriveRobot (-5, -5); // go forward to place pixel
+            autoDriveRobot(10, 10); // backup to clear pixel
+        }
     }
     /**
      * Drive robot until the passed color is detected.
@@ -266,6 +297,49 @@ public class RobotHardware {
 
         return new RGBAcolors(red, green, blue, alpha);
     }
+    /**
+     * Determine which position (1, 2, or 3) the sensor detects an object (such as a cube) is in.
+     * In this example, if neither the left or right sensors detect an object,
+     * the position is 2. If the left sensor detects an object, the position is 1. Lastly,
+     * if the right sensor detects an object, the position is 3.
+     *
+     * @return int positionNumber
+     */
+    public int getSpikeObjectPosition() {
+        double leftSensorDistance = getLeftSensorDistanceInCM();
+        double rightSensorDistance = getRightSensorDistanceInCM();
+        int positionNumber = 0;
 
+        if (leftSensorDistance >= SENSOR_DISTANCE_OUT_OF_RANGE && rightSensorDistance >= SENSOR_DISTANCE_OUT_OF_RANGE) {
+            myOpMode.telemetry.addData("NOT DETECTED", "Object not detected by any sensor!");
+            positionNumber = 2;
+        }
+        else if (leftSensorDistance <= SENSOR_DISTANCE_OUT_OF_RANGE) {
+            myOpMode.telemetry.addData("DETECTED LEFT", "Object distance is %.0f CM", leftSensorDistance);
+            positionNumber = 1;
+        }
+        else {
+            myOpMode.telemetry.addData("DETECTED RIGHT", "Object distance is %.0f CM", rightSensorDistance);
+            positionNumber = 3;
+        }
+        myOpMode.telemetry.update();
+
+        return positionNumber;
+    }
+    /**
+     * Return distance detected by Left Sensor in CM.
+     * @return distance in CM
+     */
+    public double getLeftSensorDistanceInCM() {
+        return leftPropSensor.getDistance(DistanceUnit.CM);
+    }
+
+    /**
+     * Return distance detected by Right Sensor in CM.
+     * @return distance in CM
+     */
+    public double getRightSensorDistanceInCM() {
+        return rightPropSensor.getDistance(DistanceUnit.CM);
+    }
 }
 

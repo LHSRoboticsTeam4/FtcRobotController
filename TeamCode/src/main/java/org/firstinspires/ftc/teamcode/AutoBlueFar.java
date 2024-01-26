@@ -13,7 +13,7 @@ public class AutoBlueFar extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        RobotHardware robot = new RobotHardware(this, droneLaunch);
+        RobotHardware robot = new RobotHardware(this);
         robot.init();
 
         waitForStart();
@@ -22,9 +22,12 @@ public class AutoBlueFar extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Set these variables to a initial distance, you will need to change this number
-            int driveLeftInches = 20;
-            int driveRightInches = 20;
+            int driveLeftInches = -25;
+            int driveRightInches = -25;
             robot.autoDriveRobot(driveLeftInches, driveRightInches);
+            robot.driveToSpike(SpikeColor.BLUE,100,-.1 );
+            int positionNumber = robot.getSpikeObjectPosition();
+            robot.turnToSpike(positionNumber);
         }
     }
 

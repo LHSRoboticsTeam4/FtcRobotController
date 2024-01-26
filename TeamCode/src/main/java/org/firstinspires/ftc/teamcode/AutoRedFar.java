@@ -13,7 +13,7 @@ public class AutoRedFar extends LinearOpMode {
     @Override
     public void runOpMode() {
 
-        RobotHardware robot = new RobotHardware(this, droneLaunch);
+        RobotHardware robot = new RobotHardware(this);
         robot.init();
 
         waitForStart();
@@ -22,17 +22,14 @@ public class AutoRedFar extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Set these variables to a initial distance, you will need to change this number
-            int driveLeftInches = 20;
-            int driveRightInches = 20;
+            int driveLeftInches = -25;
+            int driveRightInches = -25;
+
             robot.autoDriveRobot(driveLeftInches, driveRightInches);
-            //set the variables to a positive and negative value to turn the robot
-            driveLeftInches =-20;
-            driveRightInches = 20;
-            robot.autoDriveRobot(driveLeftInches, driveRightInches);
+            robot.driveToSpike(SpikeColor.RED,100,-.1 );
             // Set these variables both to positive to drive strait again
-            driveLeftInches = 20;
-            driveRightInches = 20;
-            robot.autoDriveRobot(driveLeftInches, driveRightInches);
+            int positionNumber = robot.getSpikeObjectPosition();
+            robot.turnToSpike(positionNumber);
         }
     }
 

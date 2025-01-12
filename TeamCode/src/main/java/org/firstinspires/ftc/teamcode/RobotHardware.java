@@ -31,6 +31,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -55,6 +56,13 @@ public class RobotHardware {
     private Servo boxServo;
     private DcMotor intake;
     private DcMotor intakearm;
+    private ColorSensor boxcolor;
+    private Servo leftIntakeServo;
+    private Servo rightIntakeServo;
+    private Servo leftBoxServo;
+    private Servo rightBoxServo;
+
+    private int initialIntakeMotorPosition = 0;
 
     // Hardware device constants.  Make them public so they can be used by the calling OpMode, if needed.
     static final double COUNTS_PER_MOTOR_REV = 560;     // Assumes 20:1 gear reduction
@@ -103,6 +111,9 @@ public class RobotHardware {
         initIntakeMotor();
         initIntakeArmMotor();
         initBoxServo();
+        //initSensors();
+        initIntakeServo();
+        initBoxServos();
 
 //        myOpMode.telemetry.addData(">", "Hardware Initialized");
 //        myOpMode.telemetry.update();
@@ -111,6 +122,7 @@ public class RobotHardware {
     private void initSliderMotor() {
         sliderMotor = myOpMode.hardwareMap.get(DcMotor.class, "SliderMotor");
         sliderMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+        sliderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     private void initGrabberServo() {
@@ -120,10 +132,22 @@ public class RobotHardware {
     private void initIntakeMotor() {
         intake = myOpMode.hardwareMap.get(DcMotor.class, "IntakeMotor");
         intake.setDirection(DcMotorSimple.Direction.REVERSE);
+        initialIntakeMotorPosition = intake.getCurrentPosition();
     }
 
     private void initIntakeArmMotor() {
         intakearm = myOpMode.hardwareMap.get(DcMotor.class, "IntakeArm");
+        intakearm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+
+    private void initIntakeServo() {
+        leftIntakeServo = myOpMode.hardwareMap.get(Servo.class, "LeftIntakeServo");
+        rightIntakeServo = myOpMode.hardwareMap.get(Servo.class, "RightIntakeServo");
+    }
+
+    private void initBoxServos() {
+        leftBoxServo = myOpMode.hardwareMap.get(Servo.class, "LeftBoxServo");
+        rightBoxServo = myOpMode.hardwareMap.get(Servo.class, "RightBoxServo");
     }
 
     private void initBoxServo() {
@@ -132,22 +156,43 @@ public class RobotHardware {
         myOpMode.telemetry.update();
     }
 
+    private void initSensors() {
+        boxcolor = myOpMode.hardwareMap.get(ColorSensor.class, "boxColorSensor");
+    }
+
     /**
      * Pass the requested arm power to the appropriate hardware drive motor
      *
      */
+    private int sliderPosition = 3500;
     public void moveSliderUp() {
-        int currentPosition = sliderMotor.getCurrentPosition();
-        sliderMotor.setTargetPosition(currentPosition + 120);
-        sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        int currentPosition = sliderMotor.getCurrentPosition();
+//        sliderMotor.setTargetPosition(currentPosition - sliderPosition);
+//        sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sliderMotor.setPower(1);
+        //myOpMode.telemetry.addData("Just called", "moveSliderUp()");
+        //myOpMode.telemetry.update();
+//        while(sliderMotor.isBusy()) {
+//            //do nothing
+//        }
+//        sliderMotor.setPower(0);
     }
 
     public void moveSliderDown() {
-        int currentPosition = sliderMotor.getCurrentPosition();
-        sliderMotor.setTargetPosition(currentPosition - 120);
-        sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        int currentPosition = sliderMotor.getCurrentPosition();
+//        sliderMotor.setTargetPosition(currentPosition + sliderPosition);
+//        sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         sliderMotor.setPower(-1);
+//        while(sliderMotor.isBusy()) {
+//            //do nothing
+//        }
+//        sliderMotor.setPower(0);
+    }
+
+    public void stopSlider() {
+        sliderMotor.setPower(0);
     }
 
     public void openGrabber() {
@@ -171,24 +216,98 @@ public class RobotHardware {
     }
 
     public void intakeArmUp() {
-        intakearm.setPower(0.25);
+        //int currentPosition = intakearm.getCurrentPosition();
+        intakearm.setTargetPosition(initialIntakeMotorPosition);//currentPosition - 140);
+        intakearm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakearm.setPower(1);
+        while (intakearm.isBusy()) {
+            //do nothing
+        }
+        intakearm.setPower(0);
     }
 
     public void intakeArmDown() {
-        intakearm.setPower(-0.25);
+        intakearm.setTargetPosition(initialIntakeMotorPosition - 515);//currentPosition - 140);
+        intakearm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakearm.setPower(0.8);
+        while (intakearm.isBusy()) {
+            //do nothing
+        }
+        intakearm.setPower(0);
+    }
+
+    public void intakeArmMid() {
+        intakearm.setTargetPosition(initialIntakeMotorPosition - 140);
+        intakearm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        intakearm.setPower(1);
+        while (intakearm.isBusy()) {
+            //do nothing
+        }
+        intakearm.setPower(0);
+    }
+
+    public void intakeGrabberOpen() {
+        leftIntakeServo.setPosition(1);
+        rightIntakeServo.setPosition(0);
+    }
+
+    public void intakeGrabberClose() {
+        leftIntakeServo.setPosition(0.3);
+        rightIntakeServo.setPosition(0.6);
+    }
+
+    public void boxServoOpen() {
+        leftBoxServo.setPosition(1);
+        rightBoxServo.setPosition(0);
+    }
+
+    public void boxServoClose() {
+        leftBoxServo.setPosition(0.3);
+        rightBoxServo.setPosition(0.6);
     }
 
     public void boxServoUp() {
         boxServo.setPosition(1);
+        myOpMode.sleep(2000);
     }
 
     public void boxServoDown() {
-        boxServo.setPosition(.5);
+        boxServo.setPosition(.45);
     }
 
     public void setRunModeForAllArms(DcMotor.RunMode runMode) {
         //leftArm.setMode(runMode);
         //rightArm.setMode(runMode);
+    }
+
+    public boolean isRightColor(SpikeColor colorWeWant) {
+        int blueThreshold = 4200;
+        int redThreshold = 980;
+        RGBAcolors colors = getSensorColors();
+
+        if (colorWeWant == SpikeColor.BLUE) {
+              return colors.getBlue() >= blueThreshold || colors.getRed() <= redThreshold;
+        }
+
+        if (colorWeWant == SpikeColor.RED) {
+            return colors.getRed() >= redThreshold || colors.getBlue() <= blueThreshold;
+        }
+
+        return false;
+    }
+
+    public RGBAcolors getSensorColors() {
+        int red = boxcolor.red();
+        int green = boxcolor.green();
+        int blue = boxcolor.blue();
+        int alpha = boxcolor.alpha();
+        myOpMode.telemetry.addData("Red",red);
+        myOpMode.telemetry.addData("Green",green);
+        myOpMode.telemetry.addData("Blue",blue);
+        myOpMode.telemetry.update();
+
+
+        return new RGBAcolors(red, green, blue, alpha);
     }
 
     /**

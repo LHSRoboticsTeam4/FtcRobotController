@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-@Autonomous(name = "test")
-public class testauto extends LinearOpMode {
+
+@Autonomous(name = "AutoPark")
+public class AutoPark extends LinearOpMode {
     RobotHardware robot = new RobotHardware(this);
     RobotWheels wheels = new RobotWheels(this, robot);
     @Override
@@ -11,8 +12,8 @@ public class testauto extends LinearOpMode {
         robot.init();
         wheels.init();
         waitForStart();
-        robot.getSensorColors();
-        sleep(10000);
+        if (opModeIsActive()) {
+            wheels.autoDriveRobot(-13, -13);
+        }
     }
-    // Blue: 4329 Red: 997 Yellow: 6818
 }

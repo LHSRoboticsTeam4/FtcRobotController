@@ -15,13 +15,24 @@ public class AutoBucket extends LinearOpMode {
         if (opModeIsActive()) {
             wheels.autoDriveRobot(-13, -13);
             wheels.autoDriveRobot(10,-10);
-            sleep(500);
+            wheels.autoDriveRobot(-2, -2);
+            //sleep(3000);
             robot.intakeArmMid();
-            robot.moveSliderUp();
+            robot.boxServoDown();
+            sleep(1000);
+            robot.moveSliderUpAuto();
             robot.boxServoUp();
             robot.boxServoDown();
-            robot.moveSliderDown();
-            sleep(2000);
+            robot.moveSliderDownAuto();
+            robot.intakeArmMid();
+            wheels.autoDriveRobot(13,13);
+            wheels.autoDriveRobot(17, -17);
+            wheels.autoDriveRobot(50,50);
+            wheels.autoDriveRobot(19, -19);
+            wheels.autoDriveRobot(-11, -11);
+            robot.intakeArmMid();
+            robot.boxServoUp();
+            robot.intakeArmUp();
         }
     }
 }

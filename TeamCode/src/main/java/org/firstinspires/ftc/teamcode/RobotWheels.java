@@ -79,8 +79,8 @@ public class RobotWheels {
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftFrontWheel.setDirection(DcMotor.Direction.FORWARD);
         leftRearWheel.setDirection(DcMotor.Direction.REVERSE);
-        rightFrontWheel.setDirection(DcMotor.Direction.FORWARD);
-        rightRearWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontWheel.setDirection(DcMotor.Direction.REVERSE);
+        rightRearWheel.setDirection(DcMotor.Direction.FORWARD);
 
         // Set wheel motors to not resist turning when motor is stopped.
         leftFrontWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);

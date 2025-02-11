@@ -28,10 +28,10 @@ public class Teleop  extends LinearOpMode {
 
 
             if (gamepad1.dpad_up) {
-                robot.moveSliderDown();
+                robot.moveSliderUpTeleop();
             }
             else if (gamepad1.dpad_down) {
-                robot.moveSliderUp();
+                robot.moveSliderDownTeleop();
             }
             else robot.stopSlider();
 
@@ -44,17 +44,22 @@ public class Teleop  extends LinearOpMode {
             if (gamepad1.left_bumper) {
                 robot.intakeArmDown();
             }
+
+            if (gamepad1.y) {
+                robot.intake();
+            }
+            else if (gamepad1.b) {
+                robot.outtake();
+            }
+            else {
+                robot.stopIntake();
+            }
+
             if (gamepad2.right_bumper) {
                 robot.boxServoClose();
             }
             if (gamepad2.left_bumper) {
                 robot.boxServoOpen();
-            }
-            if (gamepad2.y){
-                robot.intakeGrabberClose();
-            }
-            if (gamepad2.x){
-                robot.intakeGrabberOpen();
             }
             if (gamepad2.b/*gamepad2.right_trigger > 0.0*/) {
                 robot.boxServoUp();

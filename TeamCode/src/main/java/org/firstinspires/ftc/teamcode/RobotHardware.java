@@ -31,10 +31,9 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 /**
@@ -51,48 +50,16 @@ public class RobotHardware {
     private final LinearOpMode myOpMode;   // gain access to methods in the calling OpMode.
 
     // Define all the HardwareDevices (Motors, Servos, etc.). Make them private so they can't be accessed externally.
-    private DcMotor sliderMotor;
-    private Servo boxServo;
-    private DcMotor intake;
-    private DcMotor intakearm;
-    private ColorSensor boxcolor;
-    private Servo leftBoxServo;
-    private Servo rightBoxServo;
-    private DcMotor rightintakemotor;
-    private DcMotor leftintakemotor;
-
-    private int initialIntakeMotorPosition = 0;
-    private int initialSliderMotorPosition = 0;
+    private DcMotor spinTakeMotor;
+    private CRServo leftConveyServo;
+    private CRServo rightConveyServo;
+    private CRServo topConveyServo;
+    private DcMotor rightShooterMotor;
+    private DcMotor leftShooterMotor;
 
     // Hardware device constants.  Make them public so they can be used by the calling OpMode, if needed.
-    static final double COUNTS_PER_MOTOR_REV = 560;     // Assumes 20:1 gear reduction
-    // See https://docs.revrobotics.com/duo-control/sensors/encoders/motor-based-encoders
-    static final double ENCODER_COUNT_PER_DEGREE = COUNTS_PER_MOTOR_REV / 360;
-
-    static final double DEFAULT_MOTOR_SPEED = .4;
-    static final double  HEADING_THRESHOLD = 1.0 ; // How close must the heading get to the target before moving to next step.
-    // Requiring more accuracy (a smaller number) will often make the turn take longer to get into the final position.
-    static final double MID_SERVO       =  0.5 ;
-    static final double HAND_SPEED      =  0.02 ;  // sets rate to move servo
-    static final double ARM_UP_POWER    =  0.45 ;
-    static final double ARM_DOWN_POWER  = -0.45 ;
-    static final double MAX_POTENTIOMETER_ANGLE = 270;
-
-    static final double SENSOR_DISTANCE_OUT_OF_RANGE = 20;
-
-    //Update these IMU parameters for your robot.
     static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
     static final RevHubOrientationOnRobot.UsbFacingDirection IMU_USB_DIRECTION = RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
-    /**
-     * You can set the arm positions using angles and/or potentiometer voltage.
-     * Tune these values for your robot's actual values.
-     */
-    static final double ARM_PARKED_ANGLE = 0;
-    static final double ARM_PIXEL_PICKUP_ANGLE = 200;
-    static final double ARM_BACKDROP_ANGLE = 100;
-    static final double ARM_PARKED_VOLTAGE = 0;
-    static final double ARM_PIXEL_PICKUP_VOLTAGE = 3;
-    static final double ARM_BACKDROP_VOLTAGE = 1.4;
 
     /**
      * The one and only constructor requires a reference to a LinearOpMode.
@@ -106,188 +73,83 @@ public class RobotHardware {
      * Call init() to initialize all the robot's hardware.
      */
     public void init() {
-        initSliderMotor();
-        initIntakeMotor();
-        initIntakeArmMotor();
-        initBoxServo();
-        //initSensors();
-        initBoxServos();
-
-//        myOpMode.telemetry.addData(">", "Hardware Initialized");
-//        myOpMode.telemetry.update();
+        initSpinTakeMotor();
+        initShooterMotors();
+        initConveyorServos();
     }
 
-    private void initSliderMotor() {
-        sliderMotor = myOpMode.hardwareMap.get(DcMotor.class, "SliderMotor");
-        sliderMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        sliderMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        initialSliderMotorPosition = sliderMotor.getCurrentPosition();
+    private void initSpinTakeMotor() {
+        spinTakeMotor = myOpMode.
+                hardwareMap.get(DcMotor.class, "SpinTake");
+        spinTakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        //spinTakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    }
+    private void initShooterMotors() {
+        rightShooterMotor = myOpMode.hardwareMap.get(DcMotor.class, "RightShoot");
+        rightShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftShooterMotor = myOpMode.hardwareMap.get(DcMotor.class, "LeftShoot");
+        leftShooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    private void initIntakeMotor() {
-        rightintakemotor = myOpMode.hardwareMap.get(DcMotor.class, "RightIntakeMotor");
-        rightintakemotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        leftintakemotor = myOpMode.hardwareMap.get(DcMotor.class, "LeftIntakeMotor");
-        leftintakemotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    }
+    private void initConveyorServos() {
+        leftConveyServo = myOpMode.hardwareMap.get(CRServo.class, "LeftConvey");
+        rightConveyServo = myOpMode.hardwareMap.get(CRServo.class, "RightConvey");
+        rightConveyServo.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftConveyServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
-    private void initIntakeArmMotor() {
-        intakearm = myOpMode.hardwareMap.get(DcMotor.class, "IntakeArm");
-        intakearm.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        intakearm.setDirection(DcMotorSimple.Direction.REVERSE);
-        initialIntakeMotorPosition = intakearm.getCurrentPosition();
+        topConveyServo = myOpMode.hardwareMap.get(CRServo.class, "TopConvey");
+        topConveyServo.setDirection(DcMotorSimple.Direction.REVERSE);
     }
-
-    private void initBoxServos() {
-        leftBoxServo = myOpMode.hardwareMap.get(Servo.class, "LeftBoxServo");
-        rightBoxServo = myOpMode.hardwareMap.get(Servo.class, "RightBoxServo");
-    }
-
-    private void initBoxServo() {
-        boxServo = myOpMode.hardwareMap.get(Servo.class, "boxservo");
-        myOpMode.telemetry.addData("boxServo", boxServo.getPosition());
-        myOpMode.telemetry.update();
-    }
-
-    private void initSensors() {
+/*    private void initSensors() {
         boxcolor = myOpMode.hardwareMap.get(ColorSensor.class, "boxColorSensor");
     }
+*/
 
-    /**
+    public void startSpinTake() {
+        spinTakeMotor.setPower(.85);
+    }
+
+    public void stopSpinTake() {
+        spinTakeMotor.setPower(0);
+    }
+
+    public void startSideServos() {
+        rightConveyServo.setPower(1);
+        leftConveyServo.setPower(1);
+    }
+
+    public void stopSideServos() {
+        rightConveyServo.setPower(0);
+        leftConveyServo.setPower(0);
+    }
+
+    public void setTopConveyPower(double power) {
+        topConveyServo.setPower(power);
+    }
+
+    public void setShooterPower(double power) {
+        leftShooterMotor.setPower(power);
+        rightShooterMotor.setPower(power);
+    }
+    /*
      * Pass the requested arm power to the appropriate hardware drive motor
      *
      */
-    private int sliderPosition = 3500;
-
-    public void moveSliderDownTeleop() {
-        sliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sliderMotor.setPower(1);
-    }
-
-    public void moveSliderDownAuto() {
-        sliderMotor.setTargetPosition(initialSliderMotorPosition);
-        sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        sliderMotor.setPower(1);
-    }
-
-    public void moveSliderUpTeleop() {
-        sliderMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sliderMotor.setPower(-1);
-    }
-
-    public void moveSliderUpAuto() {
-        sliderMotor.setTargetPosition(initialSliderMotorPosition - 5800);
-        sliderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        sliderMotor.setPower(1);
-        while (sliderMotor.isBusy()) {
-
-        }
-    }
-
-
-    public void stopSlider() {
-        sliderMotor.setPower(0);
-    }
-
-    public void intake() {
-        rightintakemotor.setPower(-0.6);
-        leftintakemotor.setPower(-0.6);
-    }
-
-    public void outtake() {
-        rightintakemotor.setPower(0.6);
-        leftintakemotor.setPower(0.6);
-    }
-
-    public void stopIntake() {
-        rightintakemotor.setPower(0);
-        leftintakemotor.setPower(0);
-    }
-
-    public void intakeArmUp() {
-        //int currentPosition = intakearm.getCurrentPosition();
-        intakearm.setTargetPosition(initialIntakeMotorPosition);//currentPosition - 140);
-        intakearm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakearm.setPower(1);
-        while (intakearm.isBusy()) {
-            //do nothing
-        }
-        intakearm.setPower(0);
-    }
-
-    public void intakeArmDown() {
-        intakearm.setTargetPosition(initialIntakeMotorPosition - 900);//currentPosition - 140);
-        intakearm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakearm.setPower(0.8);
-        while (intakearm.isBusy()) {
-            //do nothing
-        }
-        intakearm.setPower(0);
-    }
-
-    public void intakeArmMid() {
-        intakearm.setTargetPosition(initialIntakeMotorPosition - 250);
-        intakearm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        intakearm.setPower(1);
-        while (intakearm.isBusy()) {
-            //do nothing
-        }
-        intakearm.setPower(0);
-    }
-
-    public void boxServoOpen() {
-        leftBoxServo.setPosition(1);
-        rightBoxServo.setPosition(0);
-    }
-
-    public void boxServoClose() {
-        leftBoxServo.setPosition(0.3);
-        rightBoxServo.setPosition(0.6);
-    }
-
-    public void boxServoUp() {
-        boxServo.setPosition(0.95);
-        myOpMode.sleep(2000);
-    }
-
-    public void boxServoDown() {
-        boxServo.setPosition(.45);
-    }
-
-    public void setRunModeForAllArms(DcMotor.RunMode runMode) {
-        //leftArm.setMode(runMode);
-        //rightArm.setMode(runMode);
-    }
-
-    public boolean isRightColor(SpikeColor colorWeWant) {
-        int blueThreshold = 4200;
-        int redThreshold = 980;
-        RGBAcolors colors = getSensorColors();
-
-        if (colorWeWant == SpikeColor.BLUE) {
-              return colors.getBlue() >= blueThreshold || colors.getRed() <= redThreshold;
-        }
-
-        if (colorWeWant == SpikeColor.RED) {
-            return colors.getRed() >= redThreshold || colors.getBlue() <= blueThreshold;
-        }
-
-        return false;
-    }
-
-    public RGBAcolors getSensorColors() {
-        int red = boxcolor.red();
-        int green = boxcolor.green();
-        int blue = boxcolor.blue();
-        int alpha = boxcolor.alpha();
-        myOpMode.telemetry.addData("Red",red);
-        myOpMode.telemetry.addData("Green",green);
-        myOpMode.telemetry.addData("Blue",blue);
-        myOpMode.telemetry.update();
-
-
-        return new RGBAcolors(red, green, blue, alpha);
-    }
+//    public boolean isRightColor(SpikeColor colorWeWant) {
+//        int blueThreshold = 4200;
+//        int redThreshold = 980;
+//        RGBAcolors colors = getSensorColors();
+//
+//        if (colorWeWant == SpikeColor.BLUE) {
+//              return colors.getBlue() >= blueThreshold || colors.getRed() <= redThreshold;
+//        }
+//
+//        if (colorWeWant == SpikeColor.RED) {
+//            return colors.getRed() >= redThreshold || colors.getBlue() <= blueThreshold;
+//        }
+//
+//        return false;
+//    }
 
     /**
      * Set up telemetry to output this:

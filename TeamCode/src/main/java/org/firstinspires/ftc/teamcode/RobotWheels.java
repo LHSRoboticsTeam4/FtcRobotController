@@ -70,17 +70,17 @@ public class RobotWheels {
      */
     private void initWheelMotors()    {
         // Define and Initialize Motors (note: need to use reference to actual OpMode).
-        leftFrontWheel  = myOpMode.hardwareMap.get(DcMotor.class, "LFront");
-        rightFrontWheel = myOpMode.hardwareMap.get(DcMotor.class, "RFront");
-        leftRearWheel = myOpMode.hardwareMap.get(DcMotor.class, "LRear");
-        rightRearWheel = myOpMode.hardwareMap.get(DcMotor.class, "RRear");
+        leftFrontWheel  = myOpMode.hardwareMap.get(DcMotor.class, "LeftFront");
+        rightFrontWheel = myOpMode.hardwareMap.get(DcMotor.class, "RightFront");
+        leftRearWheel = myOpMode.hardwareMap.get(DcMotor.class, "LeftRear");
+        rightRearWheel = myOpMode.hardwareMap.get(DcMotor.class, "RightRear");
 
         // To drive forward, most robots need the motors on one side to be reversed, because the axles point in opposite directions.
         // Note: The settings here assume direct drive on left and right wheels.  Gear Reduction or 90 Deg drives may require direction flips
         leftFrontWheel.setDirection(DcMotor.Direction.FORWARD);
-        leftRearWheel.setDirection(DcMotor.Direction.REVERSE);
+        leftRearWheel.setDirection(DcMotor.Direction.FORWARD);
         rightFrontWheel.setDirection(DcMotor.Direction.REVERSE);
-        rightRearWheel.setDirection(DcMotor.Direction.FORWARD);
+        rightRearWheel.setDirection(DcMotor.Direction.REVERSE);
 
         // Set wheel motors to not resist turning when motor is stopped.
         leftFrontWheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
@@ -162,7 +162,7 @@ public class RobotWheels {
         final double leftRearVelocity = vectorLength * Math.cos(robotAngle) - rightXscale;
 
         // If there are encoders connected, switch to RUN_USING_ENCODER mode for greater accuracy.
-        setRunModeForAllWheels(DcMotor.RunMode.RUN_USING_ENCODER);
+        setRunModeForAllWheels(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Use existing method to drive both wheels.
         setDrivePower(leftFrontVelocity, rightFrontVelocity, leftRearVelocity, rightRearVelocity);
@@ -191,9 +191,8 @@ public class RobotWheels {
          * Some robots, when running back-to-back calls to autoDriveRobot(),
          * start driving some of their wheels in unexpected directions. Uncomment
          * this if your robot starts acting stupid:
-         *
-         * setRunModeForAllWheels(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
          */
+        setRunModeForAllWheels(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         int leftInchesToCPI = (int) (leftInches * WHEEL_COUNTS_PER_INCH);
         int rightInchesToCPI = (int) (rightInches * WHEEL_COUNTS_PER_INCH);

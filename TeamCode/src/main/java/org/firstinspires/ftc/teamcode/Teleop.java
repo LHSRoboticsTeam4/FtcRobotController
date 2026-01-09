@@ -46,12 +46,12 @@ public class Teleop extends LinearOpMode {
     private void toggleShooterDistance() {
         switch (shooterState) {
             case 0:
-                robot.setShooterPower(.3);
+                robot.setShooterPower(1);
                 shooterDistance = "Near";
                 shooterState = 1;
                 break;
             case 1:
-                robot.setShooterPower(.6);
+                robot.setShooterPower(.9);
                 shooterDistance = "Far";
                 shooterState = 0;
                 break;

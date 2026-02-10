@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "Far Auto")
+@Disabled
 public class FarAuto extends LinearOpMode {
     RobotHardware robot = new RobotHardware(this);
     RobotWheels wheels = new RobotWheels(this, robot);
@@ -15,10 +17,9 @@ public class FarAuto extends LinearOpMode {
         waitForStart();
         if (opModeIsActive()) {
             //Spin up while moving robot.
-            robot.setShooterPower(1);
-
+            robot.setShooterPower(0.75);
             wheels.autoDriveRobot(-55, -55);
-            wheels.autoDriveRobot(-9,9);
+            wheels.autoDriveRobot(-8,8);
 
             robot.startSpinTake();
             robot.startSideServos();
@@ -35,7 +36,7 @@ public class FarAuto extends LinearOpMode {
 
             //Park.
             wheels.autoDriveRobot(-15,15);
-            wheels.autoDriveRobot(-8,-8);
+            wheels.autoDriveRobot(-12,-12);
         }
     }
 }

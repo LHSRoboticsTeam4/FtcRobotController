@@ -33,9 +33,12 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 /**
  * Instead of each Op Mode class redefining the robot's hardware resources within its implementation,
  * This RobotHardware class has a given robot's component resources defined and set up all in one place.
@@ -54,8 +57,8 @@ public class RobotHardware {
     private CRServo leftConveyServo;
     private CRServo rightConveyServo;
     private CRServo topConveyServo;
-    private DcMotor rightShooterMotor;
-    private DcMotor leftShooterMotor;
+    private DcMotorEx rightShooterMotor;
+    private DcMotorEx leftShooterMotor;
 
     // Hardware device constants.  Make them public so they can be used by the calling OpMode, if needed.
     static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
@@ -67,6 +70,7 @@ public class RobotHardware {
      */
     public RobotHardware(LinearOpMode opmode) {
         myOpMode = opmode;
+        init();
     }
 
     /**
@@ -85,9 +89,9 @@ public class RobotHardware {
         //spinTakeMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     private void initShooterMotors() {
-        rightShooterMotor = myOpMode.hardwareMap.get(DcMotor.class, "RightShoot");
+        rightShooterMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "RightShoot");
         rightShooterMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftShooterMotor = myOpMode.hardwareMap.get(DcMotor.class, "LeftShoot");
+        leftShooterMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "LeftShoot");
         leftShooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
@@ -130,6 +134,12 @@ public class RobotHardware {
     public void setShooterPower(double power) {
         leftShooterMotor.setPower(power);
         rightShooterMotor.setPower(power);
+    }
+
+    public void setShooterVelocity(double velocity) {
+        //Ticks per second
+        leftShooterMotor.setVelocity(velocity);
+        rightShooterMotor.setVelocity(velocity);
     }
     /*
      * Pass the requested arm power to the appropriate hardware drive motor

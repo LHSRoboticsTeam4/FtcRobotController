@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "Near Auto")
+@Disabled
 public class NearAuto extends LinearOpMode {
     RobotHardware robot = new RobotHardware(this);
     RobotWheels wheels = new RobotWheels(this, robot);
@@ -14,18 +16,29 @@ public class NearAuto extends LinearOpMode {
         wheels.init();
         waitForStart();
         if (opModeIsActive()) {
-            robot.setShooterPower(.625);
+            robot.setShooterPower(.75);
             //Give time for shooter motors to come up to speed.
-            sleep(2000);
+            wheels.autoDriveRobot(15, 15);
+            //sleep(2000);
             robot.startSpinTake();
             robot.startSideServos();
 
-            wheels.autoDriveRobot(15, 15);
 
             robot.setTopConveyPower(1);
 
-            //Wait to move robot after shooting balls.
-            sleep(20000);
+            //Sleep while balls are shooting.
+            sleep(10000);
+
+            //Sping things down.
+            robot.setShooterPower(0);
+            robot.stopSpinTake();
+            robot.stopSideServos();
+            robot.setTopConveyPower(0);
+
+            //Leave.
+            wheels.autoDriveRobot(-15,15);
+            wheels.autoDriveRobot(-12,-12);
+
         }
     }
 }

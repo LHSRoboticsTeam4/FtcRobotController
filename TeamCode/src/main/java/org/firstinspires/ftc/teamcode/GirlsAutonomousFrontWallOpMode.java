@@ -3,19 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.AllianceColor;
-import org.firstinspires.ftc.teamcode.BallSpikeLocation;
-import org.firstinspires.ftc.teamcode.GirlsBluePedroPathsFrontWall;
-import org.firstinspires.ftc.teamcode.GirlsPedroPathsFrontWall;
-import org.firstinspires.ftc.teamcode.GirlsRedPedroPathsFrontWall;
-import org.firstinspires.ftc.teamcode.PedroPathConfiguration;
-import org.firstinspires.ftc.teamcode.RobotHardware;
 import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroPathFollower;
 import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroPathTelemetry;
 
 @Autonomous(name = "Start from front wall")
+@Disabled
 public class GirlsAutonomousFrontWallOpMode extends LinearOpMode {
     private PedroPathTelemetry pedroTelemetry;
     private Follower follower;
@@ -102,7 +97,7 @@ public class GirlsAutonomousFrontWallOpMode extends LinearOpMode {
     private void shootBalls(){
         pedroTelemetry.pathTelemetry("Shooting balls.");
         robot.startSpinTake();
-        robot.startSideServos();
+        robot.startSideMotor();
         robot.setTopConveyPower(1);
         sleep(8000);
         robot.setTopConveyPower(0);

@@ -30,7 +30,7 @@ public class Teleop extends LinearOpMode {
 
         if (opModeIsActive()) {
             robot.startSpinTake();
-            robot.startSideServos();
+            robot.startSideMotor();
         }
 
         while (opModeIsActive()) {

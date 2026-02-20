@@ -21,7 +21,7 @@ public class NearAuto extends LinearOpMode {
             wheels.autoDriveRobot(15, 15);
             //sleep(2000);
             robot.startSpinTake();
-            robot.startSideServos();
+            robot.startSideMotor();
 
 
             robot.setTopConveyPower(1);
@@ -32,7 +32,7 @@ public class NearAuto extends LinearOpMode {
             //Sping things down.
             robot.setShooterPower(0);
             robot.stopSpinTake();
-            robot.stopSideServos();
+            robot.stopSideMotor();
             robot.setTopConveyPower(0);
 
             //Leave.

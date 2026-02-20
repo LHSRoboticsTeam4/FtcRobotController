@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
+import com.pedropathing.math.MathFunctions;
 import com.pedropathing.paths.PathChain;
 
 import org.firstinspires.ftc.teamcode.teamPedroPathing.FlippablePath;
@@ -106,7 +107,19 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     /************************************************************************************/
     @Override
     public Pose startingPose() {
-        return this.pathFromWallToLaunchZone.firstPath().getFirstControlPoint();
+        Pose bluePose = girlsBluePedroPathsFrontWall.startingPose();
+        return new Pose(144 - bluePose.getX(), bluePose.getY(),
+                MathFunctions.normalizeAngle(Math.PI - bluePose.getHeading()));
+    }
+
+    @Override
+    public Pose parkPose() {
+        Pose bluePose = girlsBluePedroPathsFrontWall.parkPose();
+
+        return new Pose(
+                144 - bluePose.getX(), bluePose.getY(),
+                MathFunctions.normalizeAngle(Math.PI - bluePose.getHeading())
+        );
     }
 
     @Override

@@ -37,7 +37,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /**
  * Instead of each Op Mode class redefining the robot's hardware resources within its implementation,
@@ -54,11 +53,13 @@ public class RobotHardware {
 
     // Define all the HardwareDevices (Motors, Servos, etc.). Make them private so they can't be accessed externally.
     private DcMotor spinTakeMotor;
+    private DcMotorEx sideConveyMotor;
     private CRServo leftConveyServo;
-    private CRServo rightConveyServo;
     private CRServo topConveyServo;
     private DcMotorEx rightShooterMotor;
     private DcMotorEx leftShooterMotor;
+
+
 
     // Hardware device constants.  Make them public so they can be used by the calling OpMode, if needed.
     static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
@@ -96,10 +97,12 @@ public class RobotHardware {
     }
 
     private void initConveyorServos() {
+
         leftConveyServo = myOpMode.hardwareMap.get(CRServo.class, "LeftConvey");
-        rightConveyServo = myOpMode.hardwareMap.get(CRServo.class, "RightConvey");
-        rightConveyServo.setDirection(DcMotorSimple.Direction.REVERSE);
         leftConveyServo.setDirection(DcMotorSimple.Direction.FORWARD);
+
+        sideConveyMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "SideConvey");
+        sideConveyMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
         topConveyServo = myOpMode.hardwareMap.get(CRServo.class, "TopConvey");
         topConveyServo.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -117,17 +120,19 @@ public class RobotHardware {
         spinTakeMotor.setPower(0);
     }
 
-    public void startSideServos() {
-        rightConveyServo.setPower(1);
+    public void startSideMotor() {
+
+        sideConveyMotor.setPower(.75);
         leftConveyServo.setPower(1);
     }
 
-    public void stopSideServos() {
-        rightConveyServo.setPower(0);
+    public void stopSideMotor() {
+        sideConveyMotor.setPower(0);
         leftConveyServo.setPower(0);
     }
 
     public void setTopConveyPower(double power) {
+
         topConveyServo.setPower(power);
     }
 

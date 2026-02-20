@@ -35,7 +35,7 @@ public class AutonomousFrontWall extends LinearOpMode {
             robot.setShooterVelocity(2800 * .3);
             pedroPathFollower.followPathChain(pedroPaths.pathFromWallToLaunchZone(), "Going from wall to launch zone");
             robot.startSpinTake();
-            robot.startSideServos();
+            robot.startSideMotor();
             robot.setTopConveyPower(1);
             sleep(8000);
             robot.setTopConveyPower(0);
@@ -48,7 +48,7 @@ public class AutonomousFrontWall extends LinearOpMode {
             //Sping things down.
             robot.setShooterPower(0);
             robot.stopSpinTake();
-            robot.stopSideServos();
+            robot.stopSideMotor();
             robot.setTopConveyPower(0);
             pedroPathFollower.followPathChain(pedroPaths.pathFromLaunchZoneToLeave(), "Leaving");
         }

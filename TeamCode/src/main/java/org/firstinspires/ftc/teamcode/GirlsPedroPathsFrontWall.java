@@ -6,6 +6,8 @@ import com.pedropathing.paths.PathChain;
 public interface GirlsPedroPathsFrontWall {
     Pose startingPose();
 
+    Pose parkPose();
+
     PathChain pathFromWallToLaunchZone();
 
     PathChain pathFromLaunchZoneToGoalStartBallPickup();

@@ -12,6 +12,8 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
 
     private final Pose startingPose = new Pose (56, 8, Math.toRadians(90));
     private final Pose shootPose = new Pose (60, 90, Math.toRadians(140));
+
+    private final Pose parkPose = new Pose (107,31, 0);
     private final Pose startGoalBallPickupPose = new Pose(45, 82, 0);
     private final Pose endGoalBallPickupPose = new Pose(25, 82, 0);
     private final Pose leavePose = new Pose(42, 35, Math.toRadians(180));
@@ -167,6 +169,9 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
     public Pose startingPose() {
         return this.startingPose;
     }
+
+    @Override
+    public Pose parkPose() {return this.parkPose; }
 
     @Override
     public PathChain pathFromWallToLaunchZone() {

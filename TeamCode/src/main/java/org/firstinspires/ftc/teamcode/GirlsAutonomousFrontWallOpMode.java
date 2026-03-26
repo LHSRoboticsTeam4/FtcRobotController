@@ -36,7 +36,7 @@ public class GirlsAutonomousFrontWallOpMode extends LinearOpMode {
         pedroPaths = createPedroPaths(selectedColor);
         setBallSpikeLocationPaths();
         pedroTelemetry = new PedroPathTelemetry(telemetry, follower, selectedColor);
-        PedroPathFollower pedroPathFollower = new PedroPathFollower(this, follower, pedroTelemetry, pedroPaths.startingPose());
+        PedroPathFollower pedroPathFollower = new PedroPathFollower(this, follower, pedroTelemetry, pedroPaths.farStartingPose());
 
         waitForStart();
 

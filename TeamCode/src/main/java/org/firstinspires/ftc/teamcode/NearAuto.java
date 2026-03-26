@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 @Autonomous(name = "Near Auto")
-@Disabled
+
 public class NearAuto extends LinearOpMode {
     RobotHardware robot = new RobotHardware(this);
     RobotWheels wheels = new RobotWheels(this, robot);

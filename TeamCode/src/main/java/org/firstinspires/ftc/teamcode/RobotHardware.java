@@ -55,6 +55,7 @@ public class RobotHardware {
     private DcMotor spinTakeMotor;
     private DcMotorEx sideConveyMotor;
     private CRServo leftConveyServo;
+    private CRServo left2ConveyServo;
     private CRServo topConveyServo;
     private DcMotorEx rightShooterMotor;
     private DcMotorEx leftShooterMotor;
@@ -101,6 +102,9 @@ public class RobotHardware {
         leftConveyServo = myOpMode.hardwareMap.get(CRServo.class, "LeftConvey");
         leftConveyServo.setDirection(DcMotorSimple.Direction.FORWARD);
 
+        left2ConveyServo = myOpMode.hardwareMap.get(CRServo.class, "Left2Convey");
+        left2ConveyServo.setDirection(DcMotorSimple.Direction.FORWARD);
+
         sideConveyMotor = myOpMode.hardwareMap.get(DcMotorEx.class, "SideConvey");
         sideConveyMotor.setDirection(DcMotorSimple.Direction.REVERSE);
 
@@ -124,11 +128,13 @@ public class RobotHardware {
 
         sideConveyMotor.setPower(.75);
         leftConveyServo.setPower(1);
+        left2ConveyServo.setPower(1);
     }
 
     public void stopSideMotor() {
         sideConveyMotor.setPower(0);
         leftConveyServo.setPower(0);
+        left2ConveyServo.setPower(0);
     }
 
     public void setTopConveyPower(double power) {

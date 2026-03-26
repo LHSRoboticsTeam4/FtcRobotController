@@ -24,6 +24,7 @@ public class PedroPathTeleOp extends LinearOpMode {
     private Follower follower;
 
     private Pose launchPose;
+    private Pose defaultStartingPose;
     private int shooterState = 0;
     private String shooterDistance = "None";
     private RobotHardware robot;
@@ -43,8 +44,15 @@ public class PedroPathTeleOp extends LinearOpMode {
         follower = pedroPathConfiguration.getFollower();
         setPoses(allianceColor);
 
-        follower.setStartingPose(PedroTeleopData.startingPose == null ? new Pose() :
-                PedroTeleopData.startingPose);
+        Pose startPose = PedroTeleopData.startingPose == null ? defaultStartingPose :
+                PedroTeleopData.startingPose;
+        follower.setStartingPose(startPose);
+        telemetry.addLine("Starting Pose:");
+        telemetry.addData("x", startPose.getX());
+        telemetry.addData("y", startPose.getY());
+        telemetry.addData("heading", Math.toDegrees(startPose.getHeading()));
+        telemetry.update();
+
         follower.startTeleOpDrive(); //This calls update() as well.
 
         waitForStart();
@@ -79,9 +87,15 @@ public class PedroPathTeleOp extends LinearOpMode {
              * If whatever Path we might already have been on is complete (not isBusy()),
              * followPath() the path fromHereToLaunch().
              */
-            if (gamepad1.aWasPressed() && !follower.isBusy()) {
-                follower.followPath(fromHereToLaunch());
+            if (gamepad1.aWasPressed()) {
+                if (follower.isBusy()) {
+                    follower.startTeleOpDrive();
+                }
+                else {
+                   follower.followPath(fromHereToLaunch());
+                }
             }
+
             if (gamepad1.x) {
                 toggleShooterDistance();
                 sleep(500); // debounce
@@ -89,7 +103,7 @@ public class PedroPathTeleOp extends LinearOpMode {
 
             if (gamepad1.yWasPressed()) {
                 robot.setTopConveyPower(1);
-            } else {
+            } else if (gamepad1.yWasReleased()){
                 robot.setTopConveyPower(0);
             }
         }
@@ -113,13 +127,13 @@ public class PedroPathTeleOp extends LinearOpMode {
     private void toggleShooterDistance() {
         switch (shooterState) {
             case 0:
-                robot.setShooterPower(0.47);
+                robot.setShooterPower(0.40);
                 shooterDistance = "Near";
                 shooterState = 1;
                 break;
 
             case 1:
-                robot.setShooterPower(0.6);
+                robot.setShooterPower(0.50);
                 shooterDistance = "Far";
                 shooterState = 0;
                 break;
@@ -144,5 +158,6 @@ public class PedroPathTeleOp extends LinearOpMode {
 
         launchPose = paths.pathFromEndAudiencePickupToLaunchZone().endPose();
         parkPose = paths.parkPose();
+        defaultStartingPose = paths.farStartingPose();
     }
 }

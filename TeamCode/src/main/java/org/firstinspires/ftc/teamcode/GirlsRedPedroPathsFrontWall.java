@@ -1,18 +1,18 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.math.MathFunctions;
 import com.pedropathing.paths.PathChain;
 
-import org.firstinspires.ftc.teamcode.teamPedroPathing.FlippablePath;
 import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroPathFlipper;
 
 public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     private final Follower follower;
 
     private PathChain pathFromWallToLaunchZone;
+
+    private PathChain pathFromGoalToLaunchZone;
 
     private PathChain pathFromLaunchZoneToGoalStartBallPickup;
     private PathChain pathFromStartToEndGoalBallPickup;
@@ -40,6 +40,7 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
 
     private void initPaths() {
         pathFromWallToLaunchZone = buildPathFromWallToLaunchZone();
+        pathFromGoalToLaunchZone = buildPathFromGoalToLaunchZone();
 
         pathFromLaunchZoneToGoalStartBallPickup = buildPathFromLaunchZoneToGoalStartBallPickup();
         pathFromStartToEndGoalBallPickup = buildPathFromStartGoalToEndBallPickup();
@@ -58,6 +59,10 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
 
     private PathChain buildPathFromWallToLaunchZone() {
         return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromWallToLaunchZone());
+    }
+
+    private PathChain buildPathFromGoalToLaunchZone() {
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromGoalToLaunchZone());
     }
     /************************************************************************************/
     private PathChain buildPathFromLaunchZoneToGoalStartBallPickup() {
@@ -106,8 +111,14 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
 
     /************************************************************************************/
     @Override
-    public Pose startingPose() {
-        Pose bluePose = girlsBluePedroPathsFrontWall.startingPose();
+    public Pose farStartingPose() {
+        Pose bluePose = girlsBluePedroPathsFrontWall.farStartingPose();
+        return new Pose(144 - bluePose.getX(), bluePose.getY(),
+                MathFunctions.normalizeAngle(Math.PI - bluePose.getHeading()));
+    }
+    @Override
+    public Pose nearStartingPose() {
+        Pose bluePose = girlsBluePedroPathsFrontWall.nearStartingPose();
         return new Pose(144 - bluePose.getX(), bluePose.getY(),
                 MathFunctions.normalizeAngle(Math.PI - bluePose.getHeading()));
     }
@@ -127,6 +138,9 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
         return this.pathFromWallToLaunchZone;
     }
     /*******************************************************************************/
+
+    @Override
+    public PathChain pathFromGoalToLaunchZone() { return this.pathFromGoalToLaunchZone; }
 
     @Override
     public PathChain pathFromLaunchZoneToGoalStartBallPickup() {

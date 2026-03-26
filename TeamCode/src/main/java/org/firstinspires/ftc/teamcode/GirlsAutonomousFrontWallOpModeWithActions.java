@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroPathFollower;
 import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroPathTelemetry;
 import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroTeleopData;
 
-import java.lang.reflect.Field;
 @Autonomous(name = "Pedro Autonomous")
 public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
     private PedroPathTelemetry pedroTelemetry;
@@ -40,7 +37,7 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
         pedroPaths = createPedroPaths(selectedColor);
         setBallSpikeLocationPaths();
         pedroTelemetry = new PedroPathTelemetry(telemetry, follower, selectedColor);
-        follower.setStartingPose(pedroPaths.startingPose());
+        follower.setStartingPose(pedroPaths.farStartingPose());
 
         waitForStart();
 
@@ -169,6 +166,8 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
             telemetry.addLine("Press Right Bumper to toggle between Red and Blue alliance.");
             telemetry.addData(selectedColor.toString(), " currently selected");
             telemetry.addLine();
+//            telemetry.addLine("Press x to toggle between Near and Far start position.");
+//            telemetry.addLine();
             telemetry.addLine("Press Left Bumper to toggle set ball pickup location");
             telemetry.addData(ballSpikeLocation.toString(), " currently selected");
             telemetry.update();

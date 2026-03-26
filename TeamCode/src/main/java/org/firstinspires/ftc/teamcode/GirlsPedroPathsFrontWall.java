@@ -4,11 +4,15 @@ import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.PathChain;
 
 public interface GirlsPedroPathsFrontWall {
-    Pose startingPose();
+    Pose farStartingPose();
+
+    Pose nearStartingPose();
 
     Pose parkPose();
 
     PathChain pathFromWallToLaunchZone();
+
+    PathChain pathFromGoalToLaunchZone();
 
     PathChain pathFromLaunchZoneToGoalStartBallPickup();
 

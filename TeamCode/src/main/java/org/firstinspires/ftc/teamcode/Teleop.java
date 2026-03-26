@@ -1,9 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 @TeleOp(name = "Manually control robot", group = "Linear OpMode")
+@Disabled
 public class Teleop extends LinearOpMode {
 
     // DO NOT initialize hardware here
@@ -59,13 +61,13 @@ public class Teleop extends LinearOpMode {
     private void toggleShooterDistance() {
         switch (shooterState) {
             case 0:
-                robot.setShooterPower(0.47);
+                robot.setShooterPower(0.4);
                 shooterDistance = "Near";
                 shooterState = 1;
                 break;
 
             case 1:
-                robot.setShooterPower(0.6);
+                robot.setShooterPower(0.65);
                 shooterDistance = "Far";
                 shooterState = 0;
                 break;

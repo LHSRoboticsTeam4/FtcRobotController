@@ -10,7 +10,9 @@ import org.firstinspires.ftc.teamcode.teamPedroPathing.FlippablePath;
 public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
     private final Follower follower;
 
-    private final Pose startingPose = new Pose (56, 8, Math.toRadians(90));
+    private final Pose farStartingPose = new Pose (56, 8, Math.toRadians(90));
+
+    private final Pose nearStartingPose = new Pose (20.5,124.4, Math.toRadians(144));
     private final Pose shootPose = new Pose (60, 90, Math.toRadians(140));
 
     private final Pose parkPose = new Pose (107,31, 0);
@@ -23,6 +25,8 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
     private final Pose endAudienceBallPickupPose = new Pose(25,35,0);
 
     private PathChain pathFromWallToLaunchZone;
+
+    private PathChain pathFromGoalToLaunchZone;
 
     private PathChain pathFromLaunchZoneToGoalStartBallPickup;
     private PathChain pathFromStartToEndGoalBallPickup;
@@ -45,6 +49,7 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
 
     private void initPaths() {
         pathFromWallToLaunchZone = buildPathFromWallToLaunchZone();
+        pathFromGoalToLaunchZone = buildPathFromGoalToLaunchZone();
 
         pathFromLaunchZoneToGoalStartBallPickup = buildPathFromLaunchZoneToGoalStartBallPickup();
         pathFromStartToEndGoalBallPickup = buildPathFromStartGoalToEndBallPickup();
@@ -62,12 +67,21 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
     }
 
     private PathChain buildPathFromWallToLaunchZone() {
-        FlippablePath fPath = FlippablePath.linearHeadingPath(new BezierLine(startingPose, shootPose),
-            startingPose.getHeading(), shootPose.getHeading());
+        FlippablePath fPath = FlippablePath.linearHeadingPath(new BezierLine(farStartingPose, shootPose),
+            farStartingPose.getHeading(), shootPose.getHeading());
 
         return follower.pathBuilder()
             .addPath(fPath)
             .build();
+    }
+
+    private PathChain buildPathFromGoalToLaunchZone() {
+        FlippablePath fPath = FlippablePath.linearHeadingPath(new BezierLine(nearStartingPose, shootPose),
+                farStartingPose.getHeading(), shootPose.getHeading());
+
+        return follower.pathBuilder()
+                .addPath(fPath)
+                .build();
     }
     /************************************************************************************/
     private PathChain buildPathFromLaunchZoneToGoalStartBallPickup() {
@@ -166,9 +180,12 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
     /*******************************************************************************/
 
     @Override
-    public Pose startingPose() {
-        return this.startingPose;
+    public Pose farStartingPose() {
+        return this.farStartingPose;
     }
+
+    @Override
+    public Pose nearStartingPose() {return this.nearStartingPose; }
 
     @Override
     public Pose parkPose() {return this.parkPose; }
@@ -178,6 +195,9 @@ public class GirlsBluePedroPathsFrontWall  implements GirlsPedroPathsFrontWall {
         return this.pathFromWallToLaunchZone;
     }
     /*******************************************************************************/
+
+    @Override
+    public PathChain pathFromGoalToLaunchZone() {return this.pathFromGoalToLaunchZone;}
 
     @Override
     public PathChain pathFromLaunchZoneToGoalStartBallPickup() {

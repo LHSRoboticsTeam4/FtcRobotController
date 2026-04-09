@@ -10,23 +10,29 @@ import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroPathFlipper;
 public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     private final Follower follower;
 
-    private PathChain pathFromWallToLaunchZone;
+    private PathChain pathFromWallToNearLaunchZone;
 
-    private PathChain pathFromGoalToLaunchZone;
+    private PathChain pathFromGoalToNearLaunchZone;
 
-    private PathChain pathFromLaunchZoneToGoalStartBallPickup;
+    private PathChain pathFromNearLaunchZoneToGoalStartBallPickup;
     private PathChain pathFromStartToEndGoalBallPickup;
-    private PathChain pathFromEndGoalPickupToLaunchZone;
+    private PathChain pathFromEndGoalPickupToNearLaunchZone;
 
-    private PathChain pathFromLaunchZoneToMidStartBallPickup;
+    private PathChain pathFromNearLaunchZoneToMidStartBallPickup;
     private PathChain pathFromStartToEndMidBallPickup;
-    private PathChain pathFromEndMidPickupToLaunchZone;
+    private PathChain pathFromEndMidPickupToNearLaunchZone;
 
-    private PathChain pathFromLaunchZoneToAudienceStartBallPickup;
+    private PathChain pathFromNearLaunchZoneToAudienceStartBallPickup;
     private PathChain pathFromStartToEndAudienceBallPickup;
-    private PathChain pathFromEndAudiencePickupToLaunchZone;
+    private PathChain pathFromEndAudiencePickupToNearLaunchZone;
 
-    private PathChain pathFromLaunchZoneToLeave;
+    private PathChain pathFromNearLaunchZoneToLeave;
+
+    private PathChain pathFromFarLaunchZoneToAudienceStartBallPickup;
+    private PathChain pathFromEndAudiencePickupToFarLaunchZone;
+    private PathChain pathFromFarLaunchZoneToLeave;
+    private PathChain pathFromWallToFarLaunchZone;
+
 
     private PedroPathFlipper pathFlipper;
     private GirlsPedroPathsFrontWall girlsBluePedroPathsFrontWall;
@@ -39,34 +45,53 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     private void initPaths() {
-        pathFromWallToLaunchZone = buildPathFromWallToLaunchZone();
-        pathFromGoalToLaunchZone = buildPathFromGoalToLaunchZone();
+        pathFromWallToNearLaunchZone = buildPathFromWallToLaunchZone();
+        pathFromGoalToNearLaunchZone = buildPathFromGoalToLaunchZone();
 
-        pathFromLaunchZoneToGoalStartBallPickup = buildPathFromLaunchZoneToGoalStartBallPickup();
+        pathFromNearLaunchZoneToGoalStartBallPickup = buildPathFromLaunchZoneToGoalStartBallPickup();
         pathFromStartToEndGoalBallPickup = buildPathFromStartGoalToEndBallPickup();
-        pathFromEndGoalPickupToLaunchZone = buildPathFromEndGoalPickupToLaunchZone();
+        pathFromEndGoalPickupToNearLaunchZone = buildPathFromEndGoalPickupToLaunchZone();
 
-        pathFromLaunchZoneToMidStartBallPickup = buildPathFromLaunchZoneToMidStartBallPickup();
+        pathFromNearLaunchZoneToMidStartBallPickup = buildPathFromLaunchZoneToMidStartBallPickup();
         pathFromStartToEndMidBallPickup = buildPathFromStartMidToEndBallPickup();
-        pathFromEndMidPickupToLaunchZone = buildPathFromEndMidPickupToLaunchZone();
+        pathFromEndMidPickupToNearLaunchZone = buildPathFromEndMidPickupToLaunchZone();
 
-        pathFromLaunchZoneToAudienceStartBallPickup = buildPathFromLaunchZoneToAudienceStartBallPickup();
+        pathFromNearLaunchZoneToAudienceStartBallPickup = buildPathFromLaunchZoneToAudienceStartBallPickup();
         pathFromStartToEndAudienceBallPickup = buildPathFromStartAudienceToEndBallPickup();
-        pathFromEndAudiencePickupToLaunchZone = buildPathFromEndAudiencePickupToLaunchZone();
+        pathFromEndAudiencePickupToNearLaunchZone = buildPathFromEndAudiencePickupToLaunchZone();
 
-        pathFromLaunchZoneToLeave = buildPathFromLaunchZoneToLeave();
+        pathFromNearLaunchZoneToLeave = buildPathFromLaunchZoneToLeave();
+
+        pathFromFarLaunchZoneToAudienceStartBallPickup = buildPathFromFarLaunchZoneToAudienceStartBallPickup();
+        pathFromEndAudiencePickupToFarLaunchZone = buildPathFromEndAudiencePickupToFarLaunchZone();
+        pathFromFarLaunchZoneToLeave = buildPathFromFarLaunchZoneToLeave();
+        pathFromWallToFarLaunchZone = buildPathFromWallToFarLaunchZone();
+
     }
 
+   private  PathChain buildPathFromFarLaunchZoneToAudienceStartBallPickup() {
+       return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromFarLaunchZoneToAudienceStartBallPickup());
+   }
+   private PathChain buildPathFromEndAudiencePickupToFarLaunchZone() {
+       return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndAudiencePickupToFarLaunchZone());
+   }
+   private PathChain buildPathFromFarLaunchZoneToLeave(){
+       return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromFarLaunchZoneToLeave());
+   }
+   private PathChain buildPathFromWallToFarLaunchZone(){
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromWallToFarLaunchZone());
+   }
+
     private PathChain buildPathFromWallToLaunchZone() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromWallToLaunchZone());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromWallToNearLaunchZone());
     }
 
     private PathChain buildPathFromGoalToLaunchZone() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromGoalToLaunchZone());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromGoalToNearLaunchZone());
     }
     /************************************************************************************/
     private PathChain buildPathFromLaunchZoneToGoalStartBallPickup() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromLaunchZoneToGoalStartBallPickup());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromNearLaunchZoneToGoalStartBallPickup());
     }
 
     private PathChain buildPathFromStartGoalToEndBallPickup() {
@@ -74,13 +99,13 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     private PathChain buildPathFromEndGoalPickupToLaunchZone() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndGoalPickupToLaunchZone());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndGoalPickupToNearLaunchZone());
     }
 
     /************************************************************************************/
 
     private PathChain buildPathFromLaunchZoneToMidStartBallPickup() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromLaunchZoneToMidStartBallPickup());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromNearLaunchZoneToMidStartBallPickup());
     }
 
     private PathChain buildPathFromStartMidToEndBallPickup() {
@@ -88,12 +113,12 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     private PathChain buildPathFromEndMidPickupToLaunchZone() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndMidPickupToLaunchZone());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndMidPickupToNearLaunchZone());
     }
     /************************************************************************************/
 
     private PathChain buildPathFromLaunchZoneToAudienceStartBallPickup() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromLaunchZoneToAudienceStartBallPickup());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromNearLaunchZoneToAudienceStartBallPickup());
     }
 
     private PathChain buildPathFromStartAudienceToEndBallPickup() {
@@ -101,12 +126,12 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     private PathChain buildPathFromEndAudiencePickupToLaunchZone() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndAudiencePickupToLaunchZone());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromEndAudiencePickupToNearLaunchZone());
     }
 
     /************************************************************************************/
     private PathChain buildPathFromLaunchZoneToLeave() {
-        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromLaunchZoneToLeave());
+        return pathFlipper.flipPathChain(girlsBluePedroPathsFrontWall.pathFromNearLaunchZoneToLeave());
     }
 
     /************************************************************************************/
@@ -134,17 +159,17 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     @Override
-    public PathChain pathFromWallToLaunchZone() {
-        return this.pathFromWallToLaunchZone;
+    public PathChain pathFromWallToNearLaunchZone() {
+        return this.pathFromWallToNearLaunchZone;
     }
     /*******************************************************************************/
 
     @Override
-    public PathChain pathFromGoalToLaunchZone() { return this.pathFromGoalToLaunchZone; }
+    public PathChain pathFromGoalToNearLaunchZone() { return this.pathFromGoalToNearLaunchZone; }
 
     @Override
-    public PathChain pathFromLaunchZoneToGoalStartBallPickup() {
-        return this.pathFromLaunchZoneToGoalStartBallPickup;
+    public PathChain pathFromNearLaunchZoneToGoalStartBallPickup() {
+        return this.pathFromNearLaunchZoneToGoalStartBallPickup;
     }
 
     @Override
@@ -153,14 +178,14 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     @Override
-    public PathChain pathFromEndGoalPickupToLaunchZone() {
-        return this.pathFromEndGoalPickupToLaunchZone;
+    public PathChain pathFromEndGoalPickupToNearLaunchZone() {
+        return this.pathFromEndGoalPickupToNearLaunchZone;
     }
     /*******************************************************************************/
 
     @Override
-    public PathChain pathFromLaunchZoneToMidStartBallPickup() {
-        return this.pathFromLaunchZoneToMidStartBallPickup;
+    public PathChain pathFromNearLaunchZoneToMidStartBallPickup() {
+        return this.pathFromNearLaunchZoneToMidStartBallPickup;
     }
 
     @Override
@@ -169,14 +194,14 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     @Override
-    public PathChain pathFromEndMidPickupToLaunchZone() {
-        return this.pathFromEndMidPickupToLaunchZone;
+    public PathChain pathFromEndMidPickupToNearLaunchZone() {
+        return this.pathFromEndMidPickupToNearLaunchZone;
     }
     /*******************************************************************************/
 
     @Override
-    public PathChain pathFromLaunchZoneToAudienceStartBallPickup() {
-        return this.pathFromLaunchZoneToAudienceStartBallPickup;
+    public PathChain pathFromNearLaunchZoneToAudienceStartBallPickup() {
+        return this.pathFromNearLaunchZoneToAudienceStartBallPickup;
     }
 
     @Override
@@ -185,13 +210,25 @@ public class GirlsRedPedroPathsFrontWall implements GirlsPedroPathsFrontWall {
     }
 
     @Override
-    public PathChain pathFromEndAudiencePickupToLaunchZone() {
-        return this.pathFromEndAudiencePickupToLaunchZone;
+    public PathChain pathFromEndAudiencePickupToNearLaunchZone() {
+        return this.pathFromEndAudiencePickupToNearLaunchZone;
     }
     /*******************************************************************************/
 
     @Override
-    public PathChain pathFromLaunchZoneToLeave() {
-        return this.pathFromLaunchZoneToLeave;
+    public PathChain pathFromNearLaunchZoneToLeave() {
+        return this.pathFromNearLaunchZoneToLeave;
+    }
+    public PathChain pathFromFarLaunchZoneToAudienceStartBallPickup() {
+        return this.pathFromFarLaunchZoneToAudienceStartBallPickup;
+    }
+    public PathChain pathFromEndAudiencePickupToFarLaunchZone() {
+        return this.pathFromEndAudiencePickupToFarLaunchZone;
+    }
+    public PathChain pathFromFarLaunchZoneToLeave() {
+        return this.pathFromFarLaunchZoneToLeave;
+    }
+    public PathChain pathFromWallToFarLaunchZone() {
+        return this.pathFromWallToFarLaunchZone;
     }
 }

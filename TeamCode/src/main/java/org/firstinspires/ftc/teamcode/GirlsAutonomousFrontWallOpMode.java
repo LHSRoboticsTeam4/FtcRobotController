@@ -42,7 +42,7 @@ public class GirlsAutonomousFrontWallOpMode extends LinearOpMode {
 
         if (opModeIsActive()) {
             spinTake(2800 * .3);
-            pedroPathFollower.followPathChain(pedroPaths.pathFromWallToLaunchZone(), "Going from wall to launch zone");
+            pedroPathFollower.followPathChain(pedroPaths.pathFromWallToNearLaunchZone(), "Going from wall to launch zone");
             shootBalls();
             spinTake(0);
             pedroPathFollower.followPathChain(pathFromLaunchZoneToStartBallPickup, "Going from launch zone to ball pickup");
@@ -50,7 +50,7 @@ public class GirlsAutonomousFrontWallOpMode extends LinearOpMode {
             pedroPathFollower.followPathChain(pathFromStartBallPickupToEndBallPickup, ballPickupPower, "Picking up balls");
             pedroPathFollower.followPathChain(pathFromEndBallPickupToLaunchZone, "Going from ball pickup to launch zone");
             shootBalls();
-            pedroPathFollower.followPathChain(pedroPaths.pathFromLaunchZoneToLeave(), "Leaving");
+            pedroPathFollower.followPathChain(pedroPaths.pathFromNearLaunchZoneToLeave(), "Leaving");
         }
     }
 
@@ -60,19 +60,19 @@ public class GirlsAutonomousFrontWallOpMode extends LinearOpMode {
     private void setBallSpikeLocationPaths() {
         switch (ballSpikeLocation) {
             case AUDIENCE_SIDE:
-                pathFromLaunchZoneToStartBallPickup = pedroPaths.pathFromLaunchZoneToAudienceStartBallPickup();
+                pathFromLaunchZoneToStartBallPickup = pedroPaths.pathFromNearLaunchZoneToAudienceStartBallPickup();
                 pathFromStartBallPickupToEndBallPickup = pedroPaths.pathFromStartToEndAudienceBallPickup();
-                pathFromEndBallPickupToLaunchZone = pedroPaths.pathFromEndAudiencePickupToLaunchZone();
+                pathFromEndBallPickupToLaunchZone = pedroPaths.pathFromEndAudiencePickupToNearLaunchZone();
                 break;
             case MIDDLE:
-                pathFromLaunchZoneToStartBallPickup = pedroPaths.pathFromLaunchZoneToMidStartBallPickup();
+                pathFromLaunchZoneToStartBallPickup = pedroPaths.pathFromNearLaunchZoneToMidStartBallPickup();
                 pathFromStartBallPickupToEndBallPickup = pedroPaths.pathFromStartToEndMidBallPickup();
-                pathFromEndBallPickupToLaunchZone = pedroPaths.pathFromEndMidPickupToLaunchZone();
+                pathFromEndBallPickupToLaunchZone = pedroPaths.pathFromEndMidPickupToNearLaunchZone();
                 break;
             case GOAL_SIDE:
-                pathFromLaunchZoneToStartBallPickup = pedroPaths.pathFromLaunchZoneToGoalStartBallPickup();
+                pathFromLaunchZoneToStartBallPickup = pedroPaths.pathFromNearLaunchZoneToGoalStartBallPickup();
                 pathFromStartBallPickupToEndBallPickup = pedroPaths.pathFromStartToEndGoalBallPickup();
-                pathFromEndBallPickupToLaunchZone = pedroPaths.pathFromEndGoalPickupToLaunchZone();
+                pathFromEndBallPickupToLaunchZone = pedroPaths.pathFromEndGoalPickupToNearLaunchZone();
                 break;
         }
     }

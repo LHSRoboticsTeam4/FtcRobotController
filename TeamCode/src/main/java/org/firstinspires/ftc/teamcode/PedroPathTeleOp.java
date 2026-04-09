@@ -156,7 +156,7 @@ public class PedroPathTeleOp extends LinearOpMode {
                 new GirlsRedPedroPathsFrontWall(follower, new GirlsBluePedroPathsFrontWall(follower)) :
                 new GirlsBluePedroPathsFrontWall(follower);
 
-        launchPose = paths.pathFromEndAudiencePickupToLaunchZone().endPose();
+        launchPose = paths.pathFromEndAudiencePickupToNearLaunchZone().endPose();
         parkPose = paths.parkPose();
         defaultStartingPose = paths.farStartingPose();
     }

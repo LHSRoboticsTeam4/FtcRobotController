@@ -10,27 +10,31 @@ public interface GirlsPedroPathsFrontWall {
 
     Pose parkPose();
 
-    PathChain pathFromWallToLaunchZone();
+    PathChain pathFromWallToNearLaunchZone();
+    PathChain pathFromWallToFarLaunchZone();
 
-    PathChain pathFromGoalToLaunchZone();
+    PathChain pathFromGoalToNearLaunchZone();
 
-    PathChain pathFromLaunchZoneToGoalStartBallPickup();
+    PathChain pathFromNearLaunchZoneToGoalStartBallPickup();
 
     PathChain pathFromStartToEndGoalBallPickup();
 
-    PathChain pathFromEndGoalPickupToLaunchZone();
+    PathChain pathFromEndGoalPickupToNearLaunchZone();
 
-    PathChain pathFromLaunchZoneToMidStartBallPickup();
+    PathChain pathFromNearLaunchZoneToMidStartBallPickup();
 
     PathChain pathFromStartToEndMidBallPickup();
 
-    PathChain pathFromEndMidPickupToLaunchZone();
 
-    PathChain pathFromLaunchZoneToAudienceStartBallPickup();
+    PathChain pathFromEndMidPickupToNearLaunchZone();
+    PathChain pathFromNearLaunchZoneToAudienceStartBallPickup();
+    PathChain pathFromFarLaunchZoneToAudienceStartBallPickup();
 
     PathChain pathFromStartToEndAudienceBallPickup();
 
-    PathChain pathFromEndAudiencePickupToLaunchZone();
+    PathChain pathFromEndAudiencePickupToNearLaunchZone();
+    PathChain pathFromEndAudiencePickupToFarLaunchZone();
 
-    PathChain pathFromLaunchZoneToLeave();
+    PathChain pathFromNearLaunchZoneToLeave();
+    PathChain pathFromFarLaunchZoneToLeave();
 }

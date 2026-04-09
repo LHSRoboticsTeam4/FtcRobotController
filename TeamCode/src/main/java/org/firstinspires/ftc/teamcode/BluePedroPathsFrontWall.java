@@ -7,6 +7,7 @@ import com.pedropathing.paths.PathChain;
 
 import org.firstinspires.ftc.teamcode.teamPedroPathing.FlippablePath;
 
+@Deprecated
 public class BluePedroPathsFrontWall {
     private final Follower follower;
 

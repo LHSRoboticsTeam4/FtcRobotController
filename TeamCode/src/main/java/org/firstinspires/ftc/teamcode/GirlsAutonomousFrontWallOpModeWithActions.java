@@ -15,8 +15,8 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
     private Follower follower;
     private final double ballPickupPower = .4;
     private AllianceColor selectedColor = AllianceColor.RED;
-    private FrontBackLocation selectedStartPosition = FrontBackLocation.FRONT;
-    private FrontBackLocation selectedLaunchPosition = FrontBackLocation.FRONT;
+    private FarNearLocation selectedStartPosition = FarNearLocation.FAR;
+    private FarNearLocation selectedLaunchPosition = FarNearLocation.FAR;
     private int pathState = 0;
     private String pedroMessage = "NO MESSAGE";
     private GirlsPedroPathsFrontWall pedroPaths;
@@ -91,12 +91,11 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
                     shooterVelocity(2800 * .3);
                     pedroMessage = "Going from ball pickup to launch zone 1";
                     follower.followPath(pathFromEndBallPickupToLaunchZone1);
-                    //THIS NEEDS TO CHECK LAUNCH POSITION, NOT START POSITION!
-                    if (selectedStartPosition == FrontBackLocation.FRONT) {
-                        pathState++;
+                    if (selectedLaunchPosition == FarNearLocation.FAR) {
+                        pathState = 7; //shortcut
                     }
                     else {
-                        pathState = 7;
+                        pathState++;
                     }
                 }
                 break;
@@ -129,7 +128,12 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
                     shootBalls();
                     robot.stopSpinTake();
                     pedroMessage = "Leaving";
-                    follower.followPath(pedroPaths.pathFromNearLaunchZoneToLeave());
+                    if (selectedLaunchPosition == FarNearLocation.FAR) {
+                        follower.followPath(pedroPaths.pathFromFarLaunchZoneToLeave());
+                    }
+                    else {
+                        follower.followPath(pedroPaths.pathFromNearLaunchZoneToLeave());
+                    }
                     pathState++;
                 }
                 break;
@@ -146,23 +150,48 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
      * Set the spike location-dependent PathChains.
      */
     private void setBallSpikeLocationPaths() {
+        if (selectedLaunchPosition == FarNearLocation.FAR) {
+            pathFromLaunchZoneToStartBallPickup1 = pedroPaths.pathFromFarLaunchZoneToAudienceStartBallPickup();
+            pathFromStartBallPickupToEndBallPickup1 = pedroPaths.pathFromStartToEndAudienceBallPickup();
+            pathFromEndBallPickupToLaunchZone1 = pedroPaths.pathFromEndAudiencePickupToFarLaunchZone();
+        }
+        //Launch is NEAR
+        else {
             pathFromLaunchZoneToStartBallPickup1 = pedroPaths.pathFromNearLaunchZoneToGoalStartBallPickup();
             pathFromStartBallPickupToEndBallPickup1 = pedroPaths.pathFromStartToEndGoalBallPickup();
             pathFromEndBallPickupToLaunchZone1 = pedroPaths.pathFromEndGoalPickupToNearLaunchZone();
+        }
 
-            pathFromLaunchZoneToStartBallPickup2 = pedroPaths.pathFromNearLaunchZoneToMidStartBallPickup();
-            pathFromStartBallPickupToEndBallPickup2 = pedroPaths.pathFromStartToEndMidBallPickup();
-            pathFromEndBallPickupToLaunchZone2 = pedroPaths.pathFromEndMidPickupToNearLaunchZone();
+        pathFromLaunchZoneToStartBallPickup2 = pedroPaths.pathFromNearLaunchZoneToMidStartBallPickup();
+        pathFromStartBallPickupToEndBallPickup2 = pedroPaths.pathFromStartToEndMidBallPickup();
+        pathFromEndBallPickupToLaunchZone2 = pedroPaths.pathFromEndMidPickupToNearLaunchZone();
     }
 
     private void setStartPoseAndPath() {
-        if (selectedStartPosition == FrontBackLocation.FRONT) {
+        /*
+         * "Far" is far from the goal.
+         * "Near" is near the goal.
+         * FRONT is audience side.
+         * BACK is goal side.
+         */
+        if (selectedStartPosition == FarNearLocation.FAR) {
             startPose = pedroPaths.farStartingPose();
-            pathFromStartToLaunchZone = pedroPaths.pathFromWallToNearLaunchZone();
+            if (selectedLaunchPosition == FarNearLocation.NEAR) {
+                pathFromStartToLaunchZone = pedroPaths.pathFromWallToNearLaunchZone();
+            }
+            else {
+                pathFromStartToLaunchZone = pedroPaths.pathFromWallToFarLaunchZone();
+            }
         }
+        //start is NEAR
         else {
             startPose = pedroPaths.nearStartingPose();
-            pathFromStartToLaunchZone = pedroPaths.pathFromGoalToNearLaunchZone();
+            if (selectedLaunchPosition == FarNearLocation.NEAR) {
+                pathFromStartToLaunchZone = pedroPaths.pathFromGoalToNearLaunchZone();
+            }
+            else {
+                pathFromStartToLaunchZone = null; //Not a supported case.
+            }
         }
     }
 
@@ -210,12 +239,12 @@ public class GirlsAutonomousFrontWallOpModeWithActions extends LinearOpMode {
             telemetry.addData(selectedStartPosition.toString(), " currently selected");
             telemetry.addLine();
             telemetry.addLine("Press X to toggle between Near and Far Launch Position.");
-            telemetry.addData(selectedLaunchPosition.toString()," currently selected");
+            telemetry.addData(selectedLaunchPosition.toString(), " currently selected");
             telemetry.update();
 
             selectedColor = AllianceColor.INSTANCE.toggleColor(gamepad1.rightBumperWasPressed(), selectedColor);
-            selectedStartPosition = FrontBackLocation.INSTANCE.toggleLocation(gamepad1.leftBumperWasPressed(), selectedStartPosition);
-            selectedLaunchPosition = FrontBackLocation.INSTANCE.toggleLocation(gamepad1.xWasPressed(),selectedLaunchPosition);
+            selectedStartPosition = FarNearLocation.INSTANCE.toggleLocation(gamepad1.leftBumperWasPressed(), selectedStartPosition);
+            selectedLaunchPosition = FarNearLocation.INSTANCE.toggleLocation(gamepad1.xWasPressed(),selectedLaunchPosition);
         }
     }
 }

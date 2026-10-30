@@ -53,14 +53,14 @@ public class RobotHardware {
 
     // Define all the HardwareDevices (Motors, Servos, etc.). Make them private so they can't be accessed externally.
     private DcMotor spinTakeMotor;
-    private DcMotorEx sideConveyMotor;
+    /*private DcMotorEx sideConveyMotor;
     private CRServo leftConveyServo;
     private CRServo left2ConveyServo;
-    private CRServo topConveyServo;
+    private CRServo topConveyServo;*/
     private DcMotorEx rightShooterMotor;
     private DcMotorEx leftShooterMotor;
 
-
+    private boolean isSpinTakeRunning = false;
 
     // Hardware device constants.  Make them public so they can be used by the calling OpMode, if needed.
     static final RevHubOrientationOnRobot.LogoFacingDirection IMU_LOGO_DIRECTION = RevHubOrientationOnRobot.LogoFacingDirection.UP;
@@ -81,7 +81,7 @@ public class RobotHardware {
     public void init() {
         initSpinTakeMotor();
         initShooterMotors();
-        initConveyorServos();
+        //initConveyorServos();
     }
 
     private void initSpinTakeMotor() {
@@ -97,7 +97,7 @@ public class RobotHardware {
         leftShooterMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     }
 
-    private void initConveyorServos() {
+    /*private void initConveyorServos() {
 
         leftConveyServo = myOpMode.hardwareMap.get(CRServo.class, "LeftConvey");
         leftConveyServo.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -110,7 +110,7 @@ public class RobotHardware {
 
         topConveyServo = myOpMode.hardwareMap.get(CRServo.class, "TopConvey");
         topConveyServo.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
+    }*/
 /*    private void initSensors() {
         boxcolor = myOpMode.hardwareMap.get(ColorSensor.class, "boxColorSensor");
     }
@@ -118,14 +118,15 @@ public class RobotHardware {
 
     public void startSpinTake() {
         spinTakeMotor.setPower(.85);
+        isSpinTakeRunning = true;
     }
 
     public void stopSpinTake() {
         spinTakeMotor.setPower(0);
+        isSpinTakeRunning = false;
     }
 
-    public void startSideMotor() {
-
+    /*public void startSideMotor() {
         sideConveyMotor.setPower(.75);
         leftConveyServo.setPower(1);
         left2ConveyServo.setPower(1);
@@ -138,9 +139,8 @@ public class RobotHardware {
     }
 
     public void setTopConveyPower(double power) {
-
         topConveyServo.setPower(power);
-    }
+    }*/
 
     public void setShooterPower(double power) {
         leftShooterMotor.setPower(power);
@@ -151,6 +151,10 @@ public class RobotHardware {
         //Ticks per second
         leftShooterMotor.setVelocity(velocity);
         rightShooterMotor.setVelocity(velocity);
+    }
+
+    public boolean getIsSpinTakeRunning() {
+        return isSpinTakeRunning;
     }
     /*
      * Pass the requested arm power to the appropriate hardware drive motor

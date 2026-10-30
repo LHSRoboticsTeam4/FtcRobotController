@@ -32,7 +32,7 @@ public class Teleop extends LinearOpMode {
 
         if (opModeIsActive()) {
             robot.startSpinTake();
-            robot.startSideMotor();
+            //robot.startSideMotor();
         }
 
         while (opModeIsActive()) {
@@ -49,9 +49,9 @@ public class Teleop extends LinearOpMode {
             }
 
             if (gamepad1.y) {
-                robot.setTopConveyPower(1);
+                //robot.setTopConveyPower(1);
             } else {
-                robot.setTopConveyPower(0);
+                //robot.setTopConveyPower(0);
             }
 
             telemetry.update();

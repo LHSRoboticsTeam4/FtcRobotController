@@ -7,19 +7,11 @@ import com.pedropathing.paths.PathChain;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.teamPedroPathing.PedroTeleopData;
+// TODO The whole teleop
 
-/**
- * This OpMode demonstrates using Pedro Pathing for teleOp,
- * and also building and a Path to "instantly" go to the launch Pose
- * from anywhere on the field.
- */
 @TeleOp(name = "Pedro Path Teleop")
-public class PedroPathTeleOp extends LinearOpMode {
-    /*
-     * The preceding Autonomous OpMode should set this static startPose
-     * with the Pose it stopped at (follower.getPose()).
-     */
+public class BioBuzzTeleOp extends LinearOpMode {
+
     private Pose parkPose;
     private Follower follower;
 
@@ -51,16 +43,16 @@ public class PedroPathTeleOp extends LinearOpMode {
         telemetry.addData("x", startPose.getX());
         telemetry.addData("y", startPose.getY());
         telemetry.addData("heading", Math.toDegrees(startPose.getHeading()));
+        telemetry.addData("SpinTake", robot.getIsSpinTakeRunning() ? "Running" : "Stopped");
         telemetry.update();
 
         follower.startTeleOpDrive(); //This calls update() as well.
 
         waitForStart();
 
-        if (opModeIsActive()) {
-            robot.startSpinTake();
+        /*if (opModeIsActive()) {
             robot.startSideMotor();
-        }
+        }*/
 
         /*
          * The follower can be either in startTeleOpDrive() or followPath().
@@ -92,7 +84,7 @@ public class PedroPathTeleOp extends LinearOpMode {
                     follower.startTeleOpDrive();
                 }
                 else {
-                   follower.followPath(fromHereToLaunch());
+                    follower.followPath(fromHereToLaunch());
                 }
             }
 
@@ -101,10 +93,19 @@ public class PedroPathTeleOp extends LinearOpMode {
                 sleep(500); // debounce
             }
 
-            if (gamepad1.yWasPressed()) {
+            /*if (gamepad1.yWasPressed()) {
                 robot.setTopConveyPower(1);
             } else if (gamepad1.yWasReleased()){
                 robot.setTopConveyPower(0);
+            }*/
+
+            // Toggle the spin take motor
+            if (gamepad1.right_bumper) {
+                if (!robot.getIsSpinTakeRunning()) robot.startSpinTake();
+
+                else robot.stopSpinTake();
+
+                sleep(500); // debounce
             }
         }
     }
@@ -152,12 +153,6 @@ public class PedroPathTeleOp extends LinearOpMode {
     }
 
     private void setPoses(AllianceColor allianceColor) {
-        GirlsPedroPathsFrontWall paths = (allianceColor == AllianceColor.RED) ?
-                new GirlsRedPedroPathsFrontWall(follower, new GirlsBluePedroPathsFrontWall(follower)) :
-                new GirlsBluePedroPathsFrontWall(follower);
 
-        launchPose = paths.pathFromEndAudiencePickupToNearLaunchZone().endPose();
-        parkPose = paths.parkPose();
-        defaultStartingPose = paths.farStartingPose();
     }
 }
